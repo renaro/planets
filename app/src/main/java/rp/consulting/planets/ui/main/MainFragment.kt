@@ -38,25 +38,28 @@ class MainFragment : Fragment() {
         val error = view.findViewById<ImageView>(R.id.error)
         list.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        val state = viewModel.loadData()
-        when (state) {
-            is State.Content -> {
-                adapter.setData(state.list)
-                list.adapter = adapter
-                loading.isVisible = false
-                list.isVisible = true
-                error.isVisible = false
-            }
-            State.Error -> {
-                loading.isVisible = false
-                list.isVisible = false
-                error.isVisible = true
-            }
-            State.Loading -> {
-                loading.isVisible = true
-                list.isVisible = false
-                error.isVisible = false
+
+        viewModel.viewState.observe(this) { state ->
+            when (state) {
+                is State.Content -> {
+                    adapter.setData(state.list)
+                    list.adapter = adapter
+                    loading.isVisible = false
+                    list.isVisible = true
+                    error.isVisible = false
+                }
+                State.Error -> {
+                    loading.isVisible = false
+                    list.isVisible = false
+                    error.isVisible = true
+                }
+                State.Loading -> {
+                    loading.isVisible = true
+                    list.isVisible = false
+                    error.isVisible = false
+                }
             }
         }
+        viewModel.loadData()
     }
 }
