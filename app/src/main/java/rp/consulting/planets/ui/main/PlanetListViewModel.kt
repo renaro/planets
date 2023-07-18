@@ -3,24 +3,23 @@ package rp.consulting.planets.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import rp.consulting.planets.data.PlanetsRepository
 
 class PlanetListViewModel : ViewModel() {
 
+    private val repository = PlanetsRepository()
     private val state = MutableLiveData<State>()
     val viewState: LiveData<State>
         get() = state
 
     fun loadData() {
-        state.value = State.Loading
-
-        state.value = State.Content(
-            listOf(
-                PlanetData("Terra", "Descricao Terra"),
-                PlanetData("Jupiter", "Descricao Jupiter"),
-                PlanetData("Mercúrio", "Descricao Mercúrio")
-            )
-        )
-        state.value = State.Error
+        viewModelScope.launch {
+            state.value = State.Loading
+            val planets = repository.getPlanetList()
+            state.value = State.Content(planets)
+        }
     }
 }
 
