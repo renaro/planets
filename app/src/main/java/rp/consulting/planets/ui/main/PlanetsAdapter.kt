@@ -3,8 +3,10 @@ package rp.consulting.planets.ui.main
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import rp.consulting.planets.R
 
 class PlanetsAdapter : RecyclerView.Adapter<PlanetsAdapter.ViewHolder>() {
@@ -34,6 +36,12 @@ class PlanetsAdapter : RecyclerView.Adapter<PlanetsAdapter.ViewHolder>() {
         fun bind(planetData: PlanetData) {
             view.findViewById<TextView>(R.id.title).text = planetData.name
             view.findViewById<TextView>(R.id.description).text = planetData.description
+            val imageView = view.findViewById<ImageView>(R.id.imageView)
+            Glide
+                .with(imageView)
+                .load(planetData.imageUrl)
+                .centerCrop()
+                .into(imageView)
         }
     }
 }

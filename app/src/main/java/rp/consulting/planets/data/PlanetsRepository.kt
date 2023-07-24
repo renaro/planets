@@ -10,7 +10,7 @@ class PlanetsRepository @Inject constructor(private val service: PlanetsService)
     suspend fun getPlanetList(): List<PlanetData> {
         return withContext(Dispatchers.IO) {
             service.getPlanets().map {
-                PlanetData(it.name, it.description)
+                PlanetData(it.name, it.description, it.url)
             }
         }
     }
