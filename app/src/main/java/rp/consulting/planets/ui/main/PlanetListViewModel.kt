@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import rp.consulting.planets.data.PlanetsRepository
+import rp.consulting.planets.data.api.ApiResult
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,8 +21,15 @@ class PlanetListViewModel @Inject constructor(private val repository: PlanetsRep
     fun loadData() {
         viewModelScope.launch {
             state.value = State.Loading
-            val planets = repository.getPlanetList()
-            state.value = State.Content(planets)
+            val result = repository.getPlanetList()
+            when (result) {
+                is ApiResult.Error -> {
+                    state.value = State.Error
+                }
+                is ApiResult.Success -> {
+                    state.value = State.Content(result.data)
+                }
+            }
         }
     }
 }
