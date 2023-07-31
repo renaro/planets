@@ -2,4 +2,6 @@
 <resources>
     <dimen name="margin_4">4dp</dimen>
     <dimen name="space_8">8dp</dimen>
+    <dimen name="title_size">18sp</dimen>
+    <dimen name="body_size">16sp</dimen>
 </resources>
