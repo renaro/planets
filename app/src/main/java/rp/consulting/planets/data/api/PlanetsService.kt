@@ -4,5 +4,5 @@ import retrofit2.http.GET
 
 interface PlanetsService {
     @GET("planets")
-    suspend fun getPlanets(): List<PlanetEntity>
+    suspend fun getPlanets(): List<PlanetEntityAPI>
 }
