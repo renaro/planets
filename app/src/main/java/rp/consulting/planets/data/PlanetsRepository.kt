@@ -26,7 +26,16 @@ class PlanetsRepository @Inject constructor(
                 dao.insert(databaseEntities)
                 ApiResult.Success(planetsData)
             } catch (exception: java.lang.Exception) {
-                ApiResult.Error(exception)
+                val databaseEntities = dao.getAll()
+                if (databaseEntities.isEmpty()) {
+                    ApiResult.Error(exception)
+                } else {
+                    ApiResult.Success(
+                        databaseEntities.map {
+                            PlanetData(it.name, it.description, it.url)
+                        }
+                    )
+                }
             }
         }
     }
