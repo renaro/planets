@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import rp.consulting.planets.R
 
@@ -18,7 +20,12 @@ import rp.consulting.planets.R
 class MainFragment : Fragment() {
 
     private val viewModel: PlanetListViewModel by viewModels()
-    private val adapter = PlanetsAdapter()
+
+    private val clickListener = { planet: PlanetData ->
+        // TODO Implementar navegacao aqui
+        Toast.makeText(requireContext(), "Planeta: ${planet.name}", Toast.LENGTH_SHORT).show()
+    }
+    private val adapter = PlanetsAdapter(clickListener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +46,7 @@ class MainFragment : Fragment() {
         list.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        viewModel.viewState.observe(this) { state ->
+        viewModel.viewState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is State.Content -> {
                     adapter.setData(state.list)
@@ -48,11 +55,13 @@ class MainFragment : Fragment() {
                     list.isVisible = true
                     error.isVisible = false
                 }
+
                 State.Error -> {
                     loading.isVisible = false
                     list.isVisible = false
                     error.isVisible = true
                 }
+
                 State.Loading -> {
                     loading.isVisible = true
                     list.isVisible = false

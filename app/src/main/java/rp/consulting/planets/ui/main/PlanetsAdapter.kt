@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import rp.consulting.planets.R
 
-class PlanetsAdapter : RecyclerView.Adapter<PlanetsAdapter.ViewHolder>() {
+class PlanetsAdapter(val clickListener : (PlanetData) -> Unit) : RecyclerView.Adapter<PlanetsAdapter.ViewHolder>() {
 
     private lateinit var data: List<PlanetData>
 
@@ -31,7 +31,7 @@ class PlanetsAdapter : RecyclerView.Adapter<PlanetsAdapter.ViewHolder>() {
         notifyDataSetChanged()
     }
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(planetData: PlanetData) {
             view.findViewById<TextView>(R.id.title).text = planetData.name
@@ -42,6 +42,9 @@ class PlanetsAdapter : RecyclerView.Adapter<PlanetsAdapter.ViewHolder>() {
                 .load(planetData.imageUrl)
                 .centerCrop()
                 .into(imageView)
+            view.setOnClickListener {
+                clickListener(planetData)
+            }
         }
     }
 }
